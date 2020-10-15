@@ -46,22 +46,23 @@
 
 - name: templating out boundary worker configuration
   template:
-    src: worker.hcl.j2
-    dest: '{{ boundary_config_file }}'
+    src: boundary-worker.hcl.j2
+    dest: '{{ boundary_worker_file }}'
     owner: '{{ boundary_user }}'
     group: '{{ boundary_group }}'
     mode: '0640'
+  when: boundary_node_type == 'worker'
   notify:
     - restart boundary
 
 - name: templating out boundary controller configuration
   template:
-    src: controller.hcl.j2
-    dest: '{{ boundary_server_file }}'
+    src: boundary-controller.hcl.j2
+    dest: '{{ boundary_controller_file }}'
     owner: '{{ boundary_user }}'
     group: '{{ boundary_group }}'
     mode: '0640'
-  when: "'controller' in group_names"
+  when: boundary_node_type == 'controller'
   notify:
     - restart boundary
 

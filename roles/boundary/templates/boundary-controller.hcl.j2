@@ -1,14 +1,63 @@
-listener "tcp" {
-    purpose = "proxy"
-    tls_disable = {{ boundary_tls_disable }}
-}
+disable_mlock = {{ boundary_disable_mlock | lower }}
 
-worker {
+controller {
+  # This name attr must be unique across all controller instances if running in HA mode
   name = "{{ ansible_hostname }}"
-  description = "Boundary controller node"
+  description = "Boundary worker node"
 
-  # Workers must be able to reach controllers on :9202
-  controllers = {{ boundary_controller_list }}
-
-  public_addr = "{{ boundary_client_addr }}"
+  database {
+      url = "postgresql://{{ boundary_psql_username }}:{{ boundary_psql_password }}@{{ boundary_psql_endpoint }}/boundary"
+  }
 }
+
+# API listener configuration block
+listener "tcp" {
+  # Should be the address of the NIC that the controller server will be reached on
+  address = "{{ boundary_client_addr }}"
+  # The purpose of this listener block
+  purpose = "api"
+
+  tls_disable = {{ boundary_tls_disable | lower }}
+
+  # Enable CORS for the Admin UI
+  cors_enabled = {{ boundary_cors_enabled | lower }}
+{% if boundary_cors_enabled %}
+  cors_allowed_origins = ["yourcorp.yourdomain.com"]
+{% endif %}
+}
+
+# Data-plane listener configuration block (used for worker coordination)
+listener "tcp" {
+  # Should be the IP of the NIC that the worker will connect on
+  address = "{{ boundary_client_addr }}"
+  # The purpose of this listener
+  purpose = "cluster"
+
+  tls_disable = {{ boundary_tls_disable | lower }}
+}
+
+{% if boundary_kms_type = 'gcpckms' %}
+kms "gcpckms" {
+  purpose     = "root"
+  project     = "{{ boundary_gcpckms_project }}"
+  region      = "{{ boundary_gcpckms_region }}"
+  key_ring    = "{{ boundary_gcpckms_keyring }}"
+  crypto_key  = "{{ boundary_gcpckms_key }}"
+}
+
+kms "gcpckms" {
+  purpose     = "worker-auth"
+  project     = "{{ boundary_gcpckms_project }}"
+  region      = "{{ boundary_gcpckms_region }}"
+  key_ring    = "{{ boundary_gcpckms_keyring }}"
+  crypto_key  = "{{ boundary_gcpckms_key }}"
+}
+
+kms "gcpckms" {
+  purpose     = "recovery"
+  project     = "{{ boundary_gcpckms_project }}"
+  region      = "{{ boundary_gcpckms_region }}"
+  key_ring    = "{{ boundary_gcpckms_keyring }}"
+  crypto_key  = "{{ boundary_gcpckms_key }}"
+}
+{% endif %}

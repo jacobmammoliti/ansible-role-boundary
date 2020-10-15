@@ -3,9 +3,9 @@ Description="HashiCorp Boundary - Access any system from anywhere based on user 
 
 [Service]
 {% if boundary_node_type == 'worker' %}
-ExecStart={{ boundary_install_directory }}/boundary {{ boundary_node_type }} -config {{ boundary_worker_file }}
-{% elif boundary_node_type == 'controller %}
-ExecStart={{ boundary_install_directory }}/boundary {{ boundary_node_type }} -config {{ boundary_controller_file }}
+ExecStart={{ boundary_install_directory }}/boundary server -config {{ boundary_worker_file }}
+{% elif boundary_node_type == 'controller' %}
+ExecStart={{ boundary_install_directory }}/boundary server -config {{ boundary_controller_file }}
 {% endif %}
 User={{ boundary_user }}
 Group={{ boundary_group }}

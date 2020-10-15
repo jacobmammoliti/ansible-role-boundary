@@ -19,3 +19,5 @@ boundary_client_addr: '0.0.0.0'
 boundary_tls_disable: true
 boundary_cors_enabled: false
 boundary_disable_mlock: true
+
+boundary_kms_type: 'gcpckms'
