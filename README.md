@@ -6,7 +6,8 @@ A role to deploy [HashiCorp Boundary](https://www.boundaryproject.io/)
 Requirements
 ------------
 
-A PostgreSQL instance that Boundary workers can reach and authenticate to.
+- A PostgreSQL instance that Boundary workers can reach and authenticate to. The database you plan to use must also exist.
+- Access to a KMS solution. This role currently only supports Google Cloud KMS.
 
 Role Variables
 --------------
@@ -45,6 +46,12 @@ boundary_archive: 'boundary_{{ boundary_version }}_linux_amd64.zip'
 boundary_download: 'https://releases.hashicorp.com/boundary/{{ boundary_version }}/{{ boundary_archive }}'
 ```
 
+The type of KMS to use.
+
+```YAML
+boundary_kms_type: 'gcpckms'
+```
+
 Dependencies
 ------------
 
@@ -52,12 +59,37 @@ None.
 
 Example Playbook
 ----------------
+The following deploys a Boundary cluster with a single controller.
 
-```YAML
-- hosts: all
-  become: yes
-  roles:
-      - role: ansible-role-boundary
+Create an inventory file:
+```bash
+$ cat > inventory <<EOF
+[all]
+192.168.0.1 boundary_node_type='controller'
+EOF
+```
+
+Create the group_vars directory and file:
+```bash
+# ensure the group_vars directory exists
+$ mkdir group_vars/
+
+# create the group_vars file for all hosts
+$ cat > group_vars/all.yml <<EOF
+---
+boundary_psql_endpoint: ''
+boundary_psql_username: ''
+
+boundary_gcpckms_project: ''
+boundary_gcpckms_region: ''
+boundary_gcpckms_keyring: ''
+boundary_gcpckms_key: ''
+EOF
+```
+
+Run the playbook (Boundary PSQL password should be passed through a more secure method so it isn't shown in plaintext):
+```bash
+$ ansible-playbook -i inventory site.yml --extra-vars "boundary_psql_password=''"
 ```
 
 Author Information
