@@ -36,7 +36,7 @@ listener "tcp" {
   tls_disable = {{ boundary_tls_disable | lower }}
 }
 
-{% if boundary_kms_type = 'gcpckms' %}
+{% if boundary_kms_type == 'gcpckms' %}
 kms "gcpckms" {
   purpose     = "root"
   project     = "{{ boundary_gcpckms_project }}"
