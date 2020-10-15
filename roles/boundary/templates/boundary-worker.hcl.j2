@@ -1,0 +1,38 @@
+disable_mlock = {{ boundary_disable_mlock }}
+
+controller {
+  # This name attr must be unique across all controller instances if running in HA mode
+  name = "{{ ansible_hostname }}"
+  description = "Boundary worker node"
+
+  database {
+      url = "postgresql://{{ boundary_psql_username }}:{{ boundary_psql_password@{{ boundary_psql_endpoint }}/boundary"
+  }
+}
+
+# API listener configuration block
+listener "tcp" {
+  # Should be the address of the NIC that the controller server will be reached on
+  address = "{{ boundary_client_addr }}"
+  # The purpose of this listener block
+  purpose = "api"
+
+  tls_disable = {{ boundary_tls_disable }}
+
+  # Enable CORS for the Admin UI
+  cors_enabled = {{ boundary_cors_enabled }}
+{% if boundary_cors_enabled %}
+  cors_allowed_origins = ["yourcorp.yourdomain.com"]
+{% endif %}
+
+}
+
+# Data-plane listener configuration block (used for worker coordination)
+listener "tcp" {
+  # Should be the IP of the NIC that the worker will connect on
+  address = "{{ boundary_client_addr }}"
+  # The purpose of this listener
+  purpose = "cluster"
+
+  tls_disable = {{ boundary_tls_disable }}
+}

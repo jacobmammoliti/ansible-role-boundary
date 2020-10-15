@@ -1,0 +1,82 @@
+---
+- name: installing boundary dependencies
+  package:
+    name:
+      - unzip
+      - curl
+    state: present
+
+- name: creating boundary group
+  group:
+    name: '{{ boundary_group }}'
+    system: yes
+  when: boundary_create_account
+
+- name: creating boundary user
+  user:
+    name: '{{ boundary_user }}'
+    home: '{{ boundary_home_directory }}'
+    group: '{{ boundary_group }}'
+    shell: /bin/false
+    system: yes
+  when: boundary_create_account
+
+- name: creating boundary directories
+  file:
+    state: directory
+    path: '{{ item }}'
+    owner: '{{ boundary_user }}'
+    group: '{{ boundary_group }}'
+    mode: '0750'
+  with_items:
+  - '{{ boundary_home_directory }}'
+  - '{{ boundary_data_directory }}'
+  - '{{ boundary_install_directory }}'
+
+- name: installing boundary binary
+  unarchive:
+    src: '{{ boundary_download }}'
+    dest: '{{ boundary_install_directory }}'
+    owner: '{{ boundary_user }}'
+    group: '{{ boundary_group }}'
+    remote_src: yes
+    mode: '0770'
+  notify:
+    - restart boundary
+
+- name: templating out boundary worker configuration
+  template:
+    src: worker.hcl.j2
+    dest: '{{ boundary_config_file }}'
+    owner: '{{ boundary_user }}'
+    group: '{{ boundary_group }}'
+    mode: '0640'
+  notify:
+    - restart boundary
+
+- name: templating out boundary controller configuration
+  template:
+    src: controller.hcl.j2
+    dest: '{{ boundary_server_file }}'
+    owner: '{{ boundary_user }}'
+    group: '{{ boundary_group }}'
+    mode: '0640'
+  when: "'controller' in group_names"
+  notify:
+    - restart boundary
+
+- name: templating out systemd script
+  template:
+    src: boundary.systemd.j2
+    dest: /etc/systemd/system/boundary.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - reload boundary daemon
+
+- name: starting and enabling boundary
+  systemd:
+    name: boundary
+    enabled: yes
+    state: started

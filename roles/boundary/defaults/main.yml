@@ -1,0 +1,21 @@
+---
+boundary_node_type: 'worker'
+
+boundary_user: 'boundary'
+boundary_group: 'boundary'
+boundary_create_account: true
+
+boundary_home_directory: '/etc/boundary.d'
+boundary_data_directory: '/opt/boundary'
+boundary_install_directory: '{{ boundary_data_directory }}/bin'
+boundary_worker_file: '{{ boundary_home_directory }}/boundary-worker.hcl'
+boundary_controller_file: '{{ boundary_home_directory }}/boundary-controller.hcl'
+
+boundary_version: '0.1.0'
+boundary_archive: 'boundary_{{ boundary_version }}_linux_amd64.zip'
+boundary_download: 'https://releases.hashicorp.com/boundary/{{ boundary_version }}/{{ boundary_archive }}'
+
+boundary_client_addr: '0.0.0.0'
+boundary_tls_disable: true
+boundary_cors_enabled: false
+boundary_disable_mlock: true
