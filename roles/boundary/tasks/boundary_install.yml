@@ -77,7 +77,7 @@
     - reload boundary daemon
 
 - name: initializing database for boundary
-  command: '{{ boundary_install_directory }}/boundary database init -config {{ boundary_controller_file }} > {{ boundary_data_directory }}/init.txt'
+  shell: '{{ boundary_install_directory }}/boundary database init -config {{ boundary_controller_file }} > {{ boundary_data_directory }}/init.txt'
   run_once: yes
 
 - name: starting and enabling boundary
