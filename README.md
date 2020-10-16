@@ -41,7 +41,7 @@ boundary_server_file: '{{ boundary_home_directory }}/boundary-controller.hcl'
 The version of boundary to install and where it should download its binary from.
 
 ```YAML
-boundary_version: '1.8.4'
+boundary_version: '0.1.0'
 boundary_archive: 'boundary_{{ boundary_version }}_linux_amd64.zip'
 boundary_download: 'https://releases.hashicorp.com/boundary/{{ boundary_version }}/{{ boundary_archive }}'
 ```
