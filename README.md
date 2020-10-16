@@ -66,6 +66,7 @@ Create an inventory file:
 $ cat > inventory <<EOF
 [all]
 192.168.0.1 boundary_node_type='controller'
+192.168.0.2 boundary_node_type='controller'
 EOF
 ```
 
