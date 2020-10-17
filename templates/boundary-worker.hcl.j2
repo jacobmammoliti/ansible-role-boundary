@@ -1,0 +1,28 @@
+listener "tcp" {
+  address = "{{ ansible_default_ipv4.address }}:9202"
+  purpose = "proxy"
+  tls_disable = {{ boundary_tls_disable | lower }}
+}
+
+worker {
+  name = "{{ ansible_hostname }}-worker"
+  description = "Boundary worker."
+
+  # Workers must be able to reach controllers on :9202
+  controllers = [
+{% for controller in groups['controllers'] %}
+    "{{ hostvars[controller]['ansible_default_ipv4']['address'] }}"{% if not loop.last %},{% endif %}{{''}}
+{% endfor %}
+]
+  public_addr = "{{ inventory_hostname }}"
+}
+
+{% if boundary_kms_type == 'gcpckms' %}
+kms "gcpckms" {
+  purpose     = "worker-auth"
+  project     = "{{ boundary_gcpckms_project }}"
+  region      = "{{ boundary_gcpckms_region }}"
+  key_ring    = "{{ boundary_gcpckms_keyring }}"
+  crypto_key  = "{{ boundary_gcpckms_key }}"
+}
+{% endif %}

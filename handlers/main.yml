@@ -1,10 +1,10 @@
 ---
-- name: restart boundary
+- name: restarting boundary
   systemd:
     name: boundary
     state: restarted
 
-- name: reload boundary daemon
+- name: reloading boundary daemon
   systemd:
     name: boundary
     state: restarted

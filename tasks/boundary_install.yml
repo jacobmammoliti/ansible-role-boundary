@@ -51,7 +51,7 @@
     owner: '{{ boundary_user }}'
     group: '{{ boundary_group }}'
     mode: '0640'
-  when: boundary_node_type == 'worker'
+  when: "'workers' in group_names"
   notify:
     - restart boundary
 
@@ -62,7 +62,7 @@
     owner: '{{ boundary_user }}'
     group: '{{ boundary_group }}'
     mode: '0640'
-  when: boundary_node_type == 'controller'
+  when: "'controllers' in group_names"
   notify:
     - restart boundary
 

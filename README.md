@@ -14,12 +14,6 @@ Role Variables
 
 Ansible variables are listed below, along with the default values (see `default/main.yml`):
 
-Controls whether the host is a Boundary worker or controller type.
-
-```YAML
-boundary_node_type: 'worker'
-```
-
 Controls whether a separate account is created or not and what the user and group should be named.
 
 ```YAML
@@ -59,14 +53,16 @@ None.
 
 Example Playbook
 ----------------
-The following deploys a Boundary cluster with a single controller.
+The following deploys a single Boundary controller and worker node.
 
 Create an inventory file:
 ```bash
 $ cat > inventory <<EOF
-[all]
-192.168.0.1 boundary_node_type='controller'
-192.168.0.2 boundary_node_type='controller'
+[controllers]
+192.168.0.100
+
+[workers]
+192.168.0.101
 EOF
 ```
 

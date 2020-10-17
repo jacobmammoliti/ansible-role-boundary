@@ -1,6 +1,4 @@
 ---
-boundary_node_type: 'worker'
-
 boundary_user: 'boundary'
 boundary_group: 'boundary'
 boundary_create_account: true

@@ -2,9 +2,9 @@
 Description="HashiCorp Boundary - Access any system from anywhere based on user identity"
 
 [Service]
-{% if boundary_node_type == 'worker' %}
+{% if 'workers' in group_names %}
 ExecStart={{ boundary_install_directory }}/boundary server -config {{ boundary_worker_file }}
-{% elif boundary_node_type == 'controller' %}
+{% elif 'controllers' in group_names %}
 ExecStart={{ boundary_install_directory }}/boundary server -config {{ boundary_controller_file }}
 {% endif %}
 User={{ boundary_user }}
