@@ -3,7 +3,7 @@ galaxy_info:
   description: Ansible role to deploy a HashiCorp Boundary cluster
   license: BSD
   min_ansible_version: 2.9
-  
+
   platforms:
   - name: Ubuntu
     versions:
