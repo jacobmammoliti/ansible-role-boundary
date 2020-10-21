@@ -1,0 +1,13 @@
+n[Unit]
+Description="HashiCorp Boundary Worker - Access any system from anywhere based on user identity"
+
+[Service]
+ExecStart={{ boundary_install_directory }}/boundary server -config {{ boundary_worker_file }}
+User={{ boundary_user }}
+Group={{ boundary_group }}
+LimitMEMLOCK=infinity
+Capabilities=CAP_IPC_LOCK+ep
+CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
+
+[Install]
+WantedBy=multi-user.target
