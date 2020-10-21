@@ -9,10 +9,22 @@ boundary_install_directory: '{{ boundary_data_directory }}/bin'
 boundary_worker_file: '{{ boundary_home_directory }}/boundary-worker.hcl'
 boundary_controller_file: '{{ boundary_home_directory }}/boundary-controller.hcl'
 
+boundary_url: 'https://releases.hashicorp.com/boundary'
 boundary_version: '0.1.0'
-boundary_archive: 'boundary_{{ boundary_version }}_linux_amd64.zip'
-boundary_download: 'https://releases.hashicorp.com/boundary/{{ boundary_version }}/{{ boundary_archive }}'
-
+boundary_architecture_map:
+  # this first entry seems... redundant (but it's required for reasons)
+  amd64: amd64
+  x86_64: amd64
+  armv7l: arm
+  aarch64: arm64
+boundary_architecture: "{{ boundary_architecture_map[ansible_architecture] }}"
+boundary_os: "{{ ansible_system|lower }}"
+boundary_archive: "boundary_{{ boundary_version }}_{{ boundary_os }}_{{ boundary_architecture }}.zip"
+boundary_download: '{{ boundary_url }}/{{ boundary_version }}/{{ boundary_archive }}'
+boundary_shasums: "boundary_{{ boundary_version }}_SHA256SUMS"
+boundary_zip_url: "{{ boundary_url }}/{{ boundary_version }}/boundary_{{ boundary_version }}_{{ boundary_os }}_{{ boundary_architecture }}.zip"
+boundary_checksum_file_url: "{{ boundary_url }}/{{ boundary_version }}/{{ boundary_shasums }}"
+boundary_bin_path: /usr/bin
 boundary_client_addr: '0.0.0.0'
 boundary_tls_disable: true
 boundary_cors_enabled: false
