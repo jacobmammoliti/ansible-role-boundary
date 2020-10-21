@@ -76,11 +76,11 @@
 - name: unarchive boundary and install binary
   unarchive:
     remote_src: true
-    src: "/tmp/boundary/{{ boundary_archive }}"
-    dest: "{{ boundary_install_directory }}"
-    owner: "{{ boundary_user }}"
-    group: "{{ boundary_group }}"
-    mode: "0755"
+    src: '/tmp/boundary/{{ boundary_archive }}'
+    dest: '{{ boundary_install_directory }}'
+    owner: '{{ boundary_user }}'
+    group: '{{ boundary_group }}'
+    mode: '0755'
   notify:
     - restart boundary
   tags: installation
