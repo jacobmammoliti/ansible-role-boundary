@@ -1,12 +1,11 @@
 ---
-- name: set boundary_address
-  when: boundary_iface is undefined
-  set_fact:
-    boundary_iface: "{{ ansible_default_ipv4.interface }}"
-
-- name: set boundary_address
-  set_fact:
-    boundary_address: "{{ hostvars[inventory_hostname]['ansible_'+boundary_iface]['ipv4']['address'] }}"
 
 - name: installing boundary
   include: boundary_install.yml
+
+- name: install tls
+  when: boundary_kms_type == 'transit'
+  include_tasks: tls.yml
+
+- name: configure boundary
+  include: boundary_config.yml
