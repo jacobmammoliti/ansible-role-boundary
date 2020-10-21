@@ -134,6 +134,7 @@
         - reload boundary-controller daemon
 
     - name: initializing database for boundary
+      # yamllint disable-line rule:line-length
       shell: '{{ boundary_install_directory }}/boundary database init -config {{ boundary_controller_file }} > {{ boundary_data_directory }}/init.txt'
       run_once: yes
 
