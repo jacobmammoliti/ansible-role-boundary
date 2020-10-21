@@ -80,7 +80,7 @@
     dest: '{{ boundary_install_directory }}'
     owner: '{{ boundary_user }}'
     group: '{{ boundary_group }}'
-    mode: '0755'
+    mode: '0770'
   notify:
     - restart boundary
   tags: installation
