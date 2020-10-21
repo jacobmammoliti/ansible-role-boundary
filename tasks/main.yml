@@ -1,3 +1,11 @@
 ---
+
 - name: installing boundary
   include: boundary_install.yml
+
+- name: install tls
+  when: boundary_kms_type == 'transit'
+  include_tasks: tls.yml
+
+- name: configure boundary
+  include: boundary_config.yml

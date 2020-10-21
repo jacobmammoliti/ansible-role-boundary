@@ -1,0 +1,32 @@
+---
+
+- name: Create TLS directory
+  become: true
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: "{{ boundary_user }}"
+    group: "{{ boundary_group }}"
+  with_items:
+    - "{{ boundary_tls_config_path }}"
+
+- name: SSL Certificate and Key
+  become: true
+  copy:
+    remote_src: "{{ boundary_tls_files_remote_src }}"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ boundary_user }}"
+    group: "{{ boundary_group }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - src: "{{ boundary_tls_src_files }}/{{ boundary_tls_cert_file }}"
+      dest: "{{ boundary_tls_config_path }}/{{ boundary_tls_cert_file }}"
+      mode: "0644"
+    - src: "{{ boundary_tls_src_files }}/{{ boundary_tls_key_file }}"
+      dest: "{{ boundary_tls_config_path }}/{{ boundary_tls_key_file }}"
+      mode: "0600"
+    - src: "{{ boundary_tls_src_files }}/{{ boundary_tls_ca_file }}"
+      dest: "{{ boundary_tls_config_path }}/{{ boundary_tls_ca_file }}"
+      mode: "0644"
+  when: boundary_tls_copy_keys | bool

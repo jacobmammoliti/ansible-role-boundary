@@ -26,3 +26,24 @@ kms "gcpckms" {
   crypto_key  = "{{ boundary_gcpckms_key }}"
 }
 {% endif %}
+
+{% if boundary_kms_type == 'transit' %}
+kms "transit" {
+  purpose            = "root"
+  address            = "https://{{ groups.vault_instances[0] }}:8200"
+  token              = "{{ lookup('env','VAULT_TOKEN') }}"
+  disable_renewal    = "false"
+
+  // Key configuration
+  key_name           = "transit_key_name"
+  mount_path         = "transit/"
+  namespace          = "ns1/"
+
+  // TLS Configuration
+  tls_ca_cert        = "{{ vault_tls_config_path }}/{{ vault_tls_ca_file }}"
+  tls_client_cert    = "{{ vault_tls_config_path }}/{{ vault_tls_cert_file }}"
+  tls_client_key     = "{{ vault_tls_config_path }}/{{ vault_tls_key_file }}"
+  tls_server_name    = "vault"
+  tls_skip_verify    = "false"
+}
+{% endif %}
