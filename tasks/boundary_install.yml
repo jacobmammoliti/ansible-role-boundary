@@ -29,9 +29,9 @@
     group: '{{ boundary_group }}'
     mode: '0750'
   with_items:
-  - '{{ boundary_home_directory }}'
-  - '{{ boundary_data_directory }}'
-  - '{{ boundary_install_directory }}'
+    - '{{ boundary_home_directory }}'
+    - '{{ boundary_data_directory }}'
+    - '{{ boundary_install_directory }}'
 
 - name: ensure remote boundary dir exists
   file:
