@@ -81,7 +81,8 @@
     owner: "{{ boundary_user }}"
     group: "{{ boundary_group }}"
     mode: "0755"
-  notify: restart boundary
+  notify:
+    - restart boundary
   tags: installation
 
 - name: templating out Boundary worker configuration
