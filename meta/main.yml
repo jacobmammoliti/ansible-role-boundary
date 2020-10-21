@@ -1,3 +1,4 @@
+---
 galaxy_info:
   author: Jacob Mammoliti
   description: Ansible role to deploy a HashiCorp Boundary cluster
@@ -5,11 +6,11 @@ galaxy_info:
   min_ansible_version: 2.9
 
   platforms:
-  - name: Ubuntu
-    versions:
-      - xenial
-      - bionic
-      - focal
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+        - focal
 
   galaxy_tags:
     - clustering
