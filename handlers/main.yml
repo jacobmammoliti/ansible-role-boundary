@@ -1,11 +1,22 @@
 ---
-- name: restart boundary
+- name: restart boundary-controller daemon
   systemd:
-    name: boundary
+    name: boundary-controller
     state: restarted
 
-- name: reload boundary daemon
+- name: restart boundary-worker daemon
   systemd:
-    name: boundary
+    name: boundary-worker
+    state: restarted
+
+- name: reload boundary-controller daemon
+  systemd:
+    name: boundary-controller
+    state: restarted
+    daemon_reload: yes
+
+- name: reload boundary-worker daemon
+  systemd:
+    name: boundary-controller
     state: restarted
     daemon_reload: yes
