@@ -41,8 +41,6 @@
     group: '{{ boundary_group }}'
     remote_src: yes
     mode: '0770'
-  notify:
-    - restart boundary
 
 - name: templating out Boundary worker configuration
   block:
@@ -85,9 +83,9 @@
       notify:
         - restart boundary-controller daemon
 
-    - name: templating out systemd script
+    - name: templating out boundary controller systemd script
       template:
-        src: boundary.systemd.j2
+        src: boundary-controller.systemd.j2
         dest: /etc/systemd/system/boundary-controller.service
         owner: root
         group: root
