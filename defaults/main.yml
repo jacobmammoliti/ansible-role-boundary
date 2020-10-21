@@ -24,7 +24,6 @@ boundary_download: '{{ boundary_url }}/{{ boundary_version }}/{{ boundary_archiv
 boundary_shasums: "boundary_{{ boundary_version }}_SHA256SUMS"
 boundary_zip_url: "{{ boundary_url }}/{{ boundary_version }}/boundary_{{ boundary_version }}_{{ boundary_os }}_{{ boundary_architecture }}.zip"
 boundary_checksum_file_url: "{{ boundary_url }}/{{ boundary_version }}/{{ boundary_shasums }}"
-boundary_bin_path: /usr/bin
 boundary_client_addr: '0.0.0.0'
 boundary_tls_disable: true
 boundary_cors_enabled: false

@@ -77,7 +77,7 @@
   unarchive:
     remote_src: true
     src: "/tmp/boundary/{{ boundary_archive }}"
-    dest: "{{ boundary_bin_path }}"
+    dest: "{{ boundary_install_directory }}"
     owner: "{{ boundary_user }}"
     group: "{{ boundary_group }}"
     mode: "0755"
