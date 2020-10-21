@@ -136,7 +136,7 @@
     - name: initializing database for boundary
       shell: '{{ boundary_install_directory }}/boundary database init -config {{ boundary_controller_file }} > {{ boundary_data_directory }}/init.txt'
       run_once: yes
-      
+
     - name: starting and enabling boundary-controller
       systemd:
         name: boundary-controller
