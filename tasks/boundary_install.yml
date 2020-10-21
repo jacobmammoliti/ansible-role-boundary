@@ -29,17 +29,57 @@
     group: '{{ boundary_group }}'
     mode: '0750'
   with_items:
-  - '{{ boundary_home_directory }}'
-  - '{{ boundary_data_directory }}'
-  - '{{ boundary_install_directory }}'
+    - '{{ boundary_home_directory }}'
+    - '{{ boundary_data_directory }}'
+    - '{{ boundary_install_directory }}'
 
-- name: installing boundary binary
+- name: ensure remote boundary dir exists
+  file:
+    path: /tmp/boundary
+    state: directory
+    mode: 0755
+
+- name: check boundary package checksum file
+  stat:
+    path: "/tmp/boundary/{{ boundary_shasums }}"
+  register: boundary_checksum
+
+- name: get boundary package checksum file
+  get_url:
+    url: "{{ boundary_checksum_file_url }}"
+    dest: "/tmp/boundary/{{ boundary_shasums }}"
+  tags: installation
+  when: not boundary_checksum.stat.exists | bool
+
+- name: get boundary package checksum
+  shell: "grep {{ boundary_archive }} /tmp/boundary/{{ boundary_shasums }}"
+  register: boundary_sha256
+  tags:
+    - installation
+    - skip_ansible_lint
+
+- name: check boundary package file
+  stat:
+    path: "/tmp/boundary/{{ boundary_archive }}"
+  register: boundary_package
+  tags: installation
+
+- name: "download boundary - {{ boundary_zip_url }}"
+  get_url:
+    url: "{{ boundary_zip_url }}"
+    dest: "/tmp/boundary/{{ boundary_archive }}"
+    checksum: "sha256:{{ boundary_sha256.stdout.split(' ')|first }}"
+    timeout: "300"
+  tags: installation
+  when: not boundary_package.stat.exists | bool
+
+- name: unarchive boundary and install binary
   unarchive:
-    src: '{{ boundary_download }}'
+    remote_src: true
+    src: '/tmp/boundary/{{ boundary_archive }}'
     dest: '{{ boundary_install_directory }}'
     owner: '{{ boundary_user }}'
     group: '{{ boundary_group }}'
-    remote_src: yes
     mode: '0770'
 
 - name: templating out Boundary worker configuration
@@ -94,9 +134,10 @@
         - reload boundary-controller daemon
 
     - name: initializing database for boundary
+      # yamllint disable-line rule:line-length
       shell: '{{ boundary_install_directory }}/boundary database init -config {{ boundary_controller_file }} > {{ boundary_data_directory }}/init.txt'
       run_once: yes
-      
+
     - name: starting and enabling boundary-controller
       systemd:
         name: boundary-controller
