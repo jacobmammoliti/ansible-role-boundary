@@ -1,4 +1,5 @@
 ---
+# yamllint disable rule:line-length
 boundary_user: 'boundary'
 boundary_group: 'boundary'
 boundary_create_account: true
