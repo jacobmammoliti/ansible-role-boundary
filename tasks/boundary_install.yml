@@ -41,65 +41,6 @@
     group: '{{ boundary_group }}'
     remote_src: yes
     mode: '0770'
+  tags:
+    - install
 
-- name: templating out Boundary worker configuration
-  block:
-    - name: templating out boundary worker configuration file
-      template:
-        src: boundary-worker.hcl.j2
-        dest: '{{ boundary_worker_file }}'
-        owner: '{{ boundary_user }}'
-        group: '{{ boundary_group }}'
-        mode: '0640'
-      notify:
-        - restart boundary-worker daemon
-
-    - name: templating out boundary worker systemd script
-      template:
-        src: boundary-worker.systemd.j2
-        dest: /etc/systemd/system/boundary-worker.service
-        owner: root
-        group: root
-        mode: '0640'
-      notify:
-        - reload boundary-worker daemon
-
-    - name: starting and enabling boundary-worker
-      systemd:
-        name: boundary-worker
-        enabled: yes
-        state: started
-  when: "'workers' in group_names"
-
-- name: templating out Boundary controller configuration
-  block:
-    - name: templating out boundary controller configuration file
-      template:
-        src: boundary-controller.hcl.j2
-        dest: '{{ boundary_controller_file }}'
-        owner: '{{ boundary_user }}'
-        group: '{{ boundary_group }}'
-        mode: '0640'
-      notify:
-        - restart boundary-controller daemon
-
-    - name: templating out boundary controller systemd script
-      template:
-        src: boundary-controller.systemd.j2
-        dest: /etc/systemd/system/boundary-controller.service
-        owner: root
-        group: root
-        mode: '0640'
-      notify:
-        - reload boundary-controller daemon
-
-    - name: initializing database for boundary
-      shell: '{{ boundary_install_directory }}/boundary database init -config {{ boundary_controller_file }} > {{ boundary_data_directory }}/init.txt'
-      run_once: yes
-      
-    - name: starting and enabling boundary-controller
-      systemd:
-        name: boundary-controller
-        enabled: yes
-        state: started
-  when: "'controllers' in group_names"
