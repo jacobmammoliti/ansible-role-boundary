@@ -12,7 +12,7 @@ controller {
 # API listener configuration block
 listener "tcp" {
   # Should be the address of the NIC that the controller server will be reached on
-  address = "{{ ansible_default_ipv4.address }}:9200"
+  address = "{{ boundary_address }}:9200"
   # The purpose of this listener block
   purpose = "api"
 
@@ -28,7 +28,7 @@ listener "tcp" {
 # Data-plane listener configuration block (used for worker coordination)
 listener "tcp" {
   # Should be the IP of the NIC that the worker will connect on
-  address = "{{ ansible_default_ipv4.address }}:9201"
+  address = "{{ boundary_address }}:9201"
   # The purpose of this listener
   purpose = "cluster"
 
