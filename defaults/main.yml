@@ -28,6 +28,6 @@ boundary_checksum_file_url: "{{ boundary_url }}/{{ boundary_version }}/{{ bounda
 boundary_client_addr: '0.0.0.0'
 boundary_tls_disable: true
 boundary_cors_enabled: false
-boundary_disable_mlock: true
+boundary_disable_mlock: false
 
 boundary_kms_type: 'gcpckms'
