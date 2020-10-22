@@ -1,5 +1,5 @@
 listener "tcp" {
-  address = "{{ ansible_default_ipv4.address }}:9202"
+  address = "{{ boundary_address }}:9202"
   purpose = "proxy"
   tls_disable = {{ boundary_tls_disable | lower }}
 }
