@@ -45,11 +45,20 @@ The type of KMS to use.
 ```YAML
 boundary_kms_type: 'gcpckms'
 ```
+Or
+```
+boundary_kms_type: 'transit'
+```
 
 Dependencies
 ------------
 
 None.
+
+Example Project with Vault KMS
+------------------------------
+https://github.com/dockpack/vault\_dojo.git
+
 
 Example Playbook
 ----------------
@@ -93,3 +102,4 @@ Author Information
 ------------------
 
 Jacob Mammoliti
+Bas Meijer
