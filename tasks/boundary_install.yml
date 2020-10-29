@@ -81,6 +81,8 @@
     owner: '{{ boundary_user }}'
     group: '{{ boundary_group }}'
     mode: '0770'
+  tags:
+    - install
 
 - name: check mlock capability
   become: true

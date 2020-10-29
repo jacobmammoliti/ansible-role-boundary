@@ -1,4 +1,5 @@
 ---
+
 - name: set boundary_address
   when: boundary_iface is undefined
   set_fact:
