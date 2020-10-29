@@ -9,6 +9,39 @@
   set_fact:
     boundary_address: "{{ hostvars[inventory_hostname]['ansible_'+boundary_iface]['ipv4']['address'] }}"
 
+- name: collect facts about system services
+  service_facts:
+  register: services_state
+
+- name: firewalld_running
+  when: services_state.ansible_facts.services['firewalld.service'].state == 'running'
+  set_fact:
+    manage_firewalld: true
+
+- name: open boundary-controller tcp port
+  when:
+    - "'controllers' in group_names"
+    - manage_firewalld|bool
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+  with_items:
+    - 9200
+
+- name: open boundary-worker tcp port
+  when:
+    - "'workers' in group_names"
+    - manage_firewalld|bool
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+  with_items:
+    - 9202
+
 - name: installing boundary
   include: boundary_install.yml
 
