@@ -1,0 +1,54 @@
+---
+- name: collect facts about system services
+  service_facts:
+  register: services_state
+
+- name: Configure firewalld
+  when: "{{ ansible_facts.services['firewalld.service'].state == 'running' | bool }}"
+  block:
+    - name: open boundary-controller tcp port
+      when:
+        - "'boundary_controllers' in group_names"
+      firewalld:
+        port: "{{ item }}/tcp"
+        permanent: true
+        immediate: true
+        state: enabled
+      with_items:
+        - 9200
+
+    - name: open boundary-worker tcp port
+      when:
+        - "'boundary_workers' in group_names"
+      firewalld:
+        port: "{{ item }}/tcp"
+        permanent: true
+        immediate: true
+        state: enabled
+      with_items:
+        - 9202
+
+- name: Configure ufw firewall
+  when: "{{ ansible_facts.services['ufw.service'].state == 'running' | bool }}"
+  block:
+    - name: open boundary-controller tcp port
+      when: "'boundary_controllers' in group_names"
+      community.general.ufw:
+        name: Boundary Controller API
+        state: enabled
+        rule: limit
+        to_port: "{{ item }}"
+        proto: tcp
+      with_items:
+        - 9200
+
+    - name: open boundary-worker tcp port
+      when: "'boundary_workers' in group_names"
+      community.general.ufw:
+        name: Boundary Worker API
+        state: enabled
+        rule: limit
+        to_port: "{{ item }}"
+        proto: tcp
+      with_items:
+        - 9202

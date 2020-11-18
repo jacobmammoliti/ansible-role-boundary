@@ -8,6 +8,8 @@ Requirements
 
 - A PostgreSQL instance that Boundary workers can reach and authenticate to. The database you plan to use must also exist.
 - Access to a KMS solution. This role currently only supports Google Cloud KMS.
+- Nodes must be in inventory groups `boundary_controller` or `boundary_worker` to receive configuration for that service. 
+  A node in both groups is configured to run both services.
 
 Role Variables
 --------------
@@ -67,10 +69,10 @@ The following deploys a single Boundary controller and worker node.
 Create an inventory file:
 ```bash
 $ cat > inventory <<EOF
-[controllers]
+[boundary_controllers]
 192.168.0.100
 
-[workers]
+[boundary_workers]
 192.168.0.101
 EOF
 ```

@@ -27,7 +27,7 @@
         name: boundary-worker
         enabled: yes
         state: started
-  when: "'workers' in group_names"
+  when: "'boundary_workers' in group_names"
 
 - name: templating out Boundary controller configuration
   block:
@@ -60,4 +60,4 @@
         name: boundary-controller
         enabled: yes
         state: started
-  when: "'controllers' in group_names"
+  when: "'boundary_controllers' in group_names"
