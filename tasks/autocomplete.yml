@@ -1,0 +1,29 @@
+# bash autocompletion for boundary
+---
+- name: Check existing services
+  stat:
+    path: "{{ item }}"
+  with_items:
+    - '/etc/bash_completion.d'
+    - '/usr/local/etc/bash_completion.d'
+  register: completion_dir_stat
+
+- name: Install autocomplete
+  when: boundary_autocomplete_state == 'file'
+  lineinfile:
+    state: present
+    dest: "{{ item }}/boundary"
+    line: 'complete -C /usr/bin/boundary boundary'
+    regexp: ".*"
+    create: yes
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items: "{{ completion_dir_stat.results | selectattr('stat.exists') | map(attribute='item') | list }}"
+
+- name: Remove autocomplete
+  when: boundary_autocomplete_state == 'absent'
+  file:
+    state: absent
+    path: "{{ item }}/boundary"
+  with_items: "{{ completion_dir_stat.results | selectattr('stat.exists') | map(attribute='item') | list }}"

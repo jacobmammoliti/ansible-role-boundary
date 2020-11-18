@@ -9,6 +9,7 @@ boundary_data_directory: '/opt/boundary'
 boundary_install_directory: '{{ boundary_data_directory }}/bin'
 boundary_worker_file: '{{ boundary_home_directory }}/boundary-worker.hcl'
 boundary_controller_file: '{{ boundary_home_directory }}/boundary-controller.hcl'
+boundary_autocomplete_state: file # can be changed to absent
 
 boundary_url: 'https://releases.hashicorp.com/boundary'
 boundary_version: '0.1.0'
