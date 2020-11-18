@@ -17,6 +17,6 @@
 
 - name: reload boundary-worker daemon
   systemd:
-    name: boundary-controller
+    name: boundary-worker
     state: restarted
     daemon_reload: yes
