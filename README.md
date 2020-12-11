@@ -8,13 +8,19 @@ Requirements
 
 - A PostgreSQL instance that Boundary workers can reach and authenticate to. The database you plan to use must also exist.
 - Access to a KMS solution. This role currently only supports Google Cloud KMS.
-- Nodes must be in inventory groups `boundary_controller` or `boundary_worker` to receive configuration for that service. 
+- Nodes must be in inventory groups `boundary_controller` or `boundary_worker` to receive configuration for that service.
   A node in both groups is configured to run both services.
 
-Role Variables
---------------
+## Installation Variables
 
-Ansible variables are listed below, along with the default values (see `default/main.yml`):
+### Package Installation
+
+On RedHat and Debian family operating systems, it defaults to installing the packages from Hashicorp's official repository.
+You can disable this by setting `boundary_install_package` to false.
+
+### Manual Installation
+
+*The following values are only used for manual installation.*
 
 Controls whether a separate account is created or not and what the user and group should be named.
 
@@ -24,31 +30,44 @@ boundary_group: 'boundary'
 boundary_create_account: true
 ```
 
-Where to initialize Boundary's home, data, and install directory.
+Controls what is downloaded, and where it is installed.
 
 ```YAML
-boundary_home_directory: '/etc/boundary.d'
+boundary_archive: 'boundary_{{ boundary_version }}_linux_amd64.zip'
+boundary_download: 'https://releases.hashicorp.com/boundary/{{ boundary_version }}/{{ boundary_archive }}'
 boundary_data_directory: '/opt/boundary'
 boundary_install_directory: '{{ boundary_data_directory }}/bin'
+```
+
+## Configuration Variables
+Ansible variables are listed below, along with the default values (see `default/main.yml`):
+
+Where to place Boundary's configuration data.
+
+```YAML
+boundary_version: '1.2'
+boundary_home_directory: '/etc/boundary.d'
 boundary_config_file: '{{ boundary_home_directory }}/boundary-worker.hcl'
 boundary_server_file: '{{ boundary_home_directory }}/boundary-controller.hcl'
 ```
 
-The version of boundary to install and where it should download its binary from.
+### Database initialization flags
+
+Boundary can create an example admin account and organization to help bootstrap you.
+This is disabled by default since uses will create the initial resources via Ansible.
+If you are building a PoC to learn and explore, you may want to remove this value.
 
 ```YAML
-boundary_version: '0.1.0'
-boundary_archive: 'boundary_{{ boundary_version }}_linux_amd64.zip'
-boundary_download: 'https://releases.hashicorp.com/boundary/{{ boundary_version }}/{{ boundary_archive }}'
+boundary_db_init_flags: '-skip-initial-login-role'
 ```
 
-The type of KMS to use.
+### Type of KMS to use.
 
 ```YAML
 boundary_kms_type: 'gcpckms'
 ```
 Or
-```
+```YAML
 boundary_kms_type: 'transit'
 ```
 

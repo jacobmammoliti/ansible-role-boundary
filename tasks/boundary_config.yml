@@ -1,6 +1,6 @@
 ---
-
 - name: templating out Boundary worker configuration
+  when: "'boundary_workers' in group_names"
   block:
     - name: templating out boundary worker configuration file
       template:
@@ -8,7 +8,7 @@
         dest: '{{ boundary_worker_file }}'
         owner: '{{ boundary_user }}'
         group: '{{ boundary_group }}'
-        mode: '0640'
+        mode: '0644'
       notify:
         - restart boundary-worker daemon
 
@@ -18,7 +18,7 @@
         dest: /etc/systemd/system/boundary-worker.service
         owner: root
         group: root
-        mode: '0640'
+        mode: '0644'
       notify:
         - reload boundary-worker daemon
 
@@ -27,9 +27,9 @@
         name: boundary-worker
         enabled: yes
         state: started
-  when: "'boundary_workers' in group_names"
 
 - name: templating out Boundary controller configuration
+  when: "'boundary_controllers' in group_names"
   block:
     - name: templating out boundary controller configuration file
       template:
@@ -47,17 +47,19 @@
         dest: /etc/systemd/system/boundary-controller.service
         owner: root
         group: root
-        mode: '0640'
+        mode: '0644'
       notify:
         - reload boundary-controller daemon
 
     - name: initializing database for boundary
-      shell: '{{ boundary_install_directory }}/boundary database init -config {{ boundary_controller_file }} > {{ boundary_data_directory }}/init.txt'
-      run_once: yes
+      shell: '{{ boundary_install_directory }}/boundary database init -config {{ boundary_controller_file }} {{ boundary_db_init_flags }}'
+      run_once: True
+      no_log: True
+      register: boundary_database_init
+      changed_when: boundary_database_init.stdout != 'Database already initialized.'
 
     - name: starting and enabling boundary-controller
       systemd:
         name: boundary-controller
         enabled: yes
         state: started
-  when: "'boundary_controllers' in group_names"
