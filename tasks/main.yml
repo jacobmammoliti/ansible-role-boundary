@@ -16,8 +16,17 @@
 - name: configure firewall
   include: firewall.yml
 
-- name: installing boundary
-  include: boundary_install.yml
+- name: install Boundary with Debian packages
+  include: install_package_debian.yml
+  when: ansible_os_family == 'Debian' and boundary_install_package == true
+
+- name: install Boundary with RedHat packages
+  include: install_package_redhat.yml
+  when: ansible_os_family == 'RedHat' and boundary_install_package == true
+
+- name: install Boundary manually
+  include: install_manual.yml
+  when:  boundary_install_package != true or ansible_os_family not in ['Debian', 'RedHat']
 
 - name: install tls
   when: boundary_kms_type == 'transit'
