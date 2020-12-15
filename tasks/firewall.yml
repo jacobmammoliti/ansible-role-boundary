@@ -1,8 +1,4 @@
 ---
-- name: collect facts about system services
-  service_facts:
-  register: services_state
-
 - name: Configure firewalld
   when: "{{ ansible_facts.services['firewalld.service'].state == 'running' | bool }}"
   block:
