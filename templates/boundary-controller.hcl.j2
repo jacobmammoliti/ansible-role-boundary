@@ -5,7 +5,7 @@ controller {
   description = "Boundary controller."
 
   database {
-      url = "postgresql://{{ boundary_psql_username }}:{{ boundary_psql_password }}@{{ boundary_psql_endpoint }}/boundary"
+      url = "postgresql://{{ boundary_psql_username }}:{{ boundary_psql_password }}@{{ boundary_psql_endpoint }}/{{ boundary_psql_dbname }}""
   }
 }
 

@@ -25,7 +25,7 @@ You can disable this by setting `boundary_install_package` to false.
 Controls whether a separate account is created or not and what the user and group should be named.
 
 ```YAML
-boudary_user: 'boundary'
+boundary_user: 'boundary'
 boundary_group: 'boundary'
 boundary_create_account: true
 ```
