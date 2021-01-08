@@ -1,6 +1,6 @@
 ---
 
-- name: set boundary_address
+- name: set boundary_iface
   when: boundary_iface is undefined
   set_fact:
     boundary_iface: "{{ ansible_default_ipv4.interface }}"
@@ -9,13 +9,6 @@
   set_fact:
     boundary_address: "{{ hostvars[inventory_hostname]['ansible_'+boundary_iface]['ipv4']['address'] }}"
 
-- name: collect facts about system services
-  service_facts:
-  register: services_state
-
-- name: configure firewall
-  include: firewall.yml
-
 - name: install Boundary with Debian packages
   include: install_package_debian.yml
   when: ansible_os_family == 'Debian' and boundary_install_package == true
@@ -23,6 +16,10 @@
 - name: install Boundary with RedHat packages
   include: install_package_redhat.yml
   when: ansible_os_family == 'RedHat' and boundary_install_package == true
+
+- name: install Boundary with Homebrew
+  include: install_package_mac.yml
+  when: ansible_os_family == 'Darwin' and boundary_install_package == true
 
 - name: install Boundary manually
   include: install_manual.yml
@@ -34,6 +31,13 @@
 
 - name: configure boundary
   include: boundary_config.yml
+
+- name: collect facts about system services
+  service_facts:
+  register: services_state
+
+- name: configure firewall
+  include: firewall.yml
 
 - name: install boundary autocomplete
   include: autocomplete.yml
