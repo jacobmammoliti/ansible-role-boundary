@@ -1,6 +1,8 @@
 ---
 - name: Configure firewalld
-  when: "{{ ansible_facts.services['firewalld.service'].state == 'running' | bool }}"
+  when: >
+    'firewalld.service' in ansible_facts.services and
+    ansible_facts.services['firewalld.service'].state == 'running'
   block:
     - name: open boundary-controller tcp port
       when:
@@ -25,7 +27,9 @@
         - 9202
 
 - name: Configure ufw firewall
-  when: "{{ ansible_facts.services['ufw.service'].state == 'running' | bool }}"
+  when: >
+    'ufw.service' in ansible_facts.services and
+    ansible_facts.services['ufw.service'].state == 'running'
   block:
     - name: open boundary-controller tcp port
       when: "'boundary_controllers' in group_names"
