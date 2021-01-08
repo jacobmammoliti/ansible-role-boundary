@@ -21,5 +21,14 @@ boundary_gcpckms_project: 'foo-bar'
 boundary_gcpckms_credentials: '/etc/boundary.d/kms-credentials.json'
 boundary_gcpckms_region: 'us-central1'
 boundary_gcpckms_keyring: 'bar-foo'
-boundary_gcpckms_key: '--CKMS Key Reference--'
+```
+
+Add the KMS key ids for each type
+
+```YAML
+# KMS key IDs
+boundary_gcpckms_keys:
+  root: '--Cloud KMS resource ID--'
+  worker-auth: '--Cloud KMS resource ID--'
+  recovery: '--Cloud KMS resource ID--'
 ```

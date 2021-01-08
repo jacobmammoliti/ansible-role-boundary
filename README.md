@@ -46,8 +46,8 @@ Where to place Boundary's configuration data.
 ```YAML
 boundary_version: '0.1.4'
 boundary_home_directory: '/etc/boundary.d'
-boundary_config_file: '{{ boundary_home_directory }}/boundary-worker.hcl'
-boundary_server_file: '{{ boundary_home_directory }}/boundary-controller.hcl'
+boundary_config_file: '{{ boundary_home_directory }}/worker.hcl'
+boundary_server_file: '{{ boundary_home_directory }}/controller.hcl'
 ```
 
 ### Database initialization flags
@@ -57,7 +57,7 @@ This is disabled by default since uses will create the initial resources via Ans
 If you are building a PoC to learn and explore, you may want to remove this value.
 
 ```YAML
-boundary_db_init_flags: '-skip-initial-login-role'
+boundary_db_init_flags: '-skip-initial-login-role-creation'
 ```
 
 ### Key Management
@@ -66,18 +66,29 @@ One of the Boundary KMS types from [https://www.boundaryproject.io/docs/configur
 
 As these choices are radically different depending on your KMS, refer to one of these examples:
 
--- [GCP CKMS](docs/kms_gcp.md)
--- [Hashicorp Vault - Transit secrets engine](docs/kms_transit.md)
+- [GCP CKMS](docs/kms_gcp.md)
+- [AWS KMS](docs/kms_aws.md)
+- [Hashicorp Vault - Transit secrets engine](docs/kms_transit.md)
+- [Static AEAD Keys](docs/kms_aead.md) - not suitable for production use
+
+It defaults to the static AEAD key configuration documented at [https://www.boundaryproject.io/docs/getting-started]
+
+```YAML
+boundary_kms_type: 'aead'
+```
+
+## TLS Configuration
+
+Boundary uses its own TLS implementation for all controller<->worker communications,
+however communications with the boundary client will be subject to normal public TLS validation.
+Best to create or acquire a certificate which will be trusted by the operating system of the client
+and supply that key and certificate as documented at [docs/api_tls.md]
 
 ## Dependencies
 
 None.
 
-## Example Project with Vault KMS
-
-https://github.com/dockpack/vault\_dojo.git
-
-## Example Playbook
+## Instructions
 
 If you are new to Ansible playbooks and group vars, the following examples can guide you:
 

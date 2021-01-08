@@ -86,7 +86,7 @@
 
 - name: check mlock capability
   become: true
-  shell: "getcap {{ boundary_install_directory }}/boundary|grep cap_ipc_lock+ep"
+  shell: "set -o pipefail && getcap {{ boundary_install_directory }}/boundary |grep cap_ipc_lock+ep"
   changed_when: false  # read-only task
   failed_when: false
   register: mlock_capability

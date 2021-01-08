@@ -12,3 +12,4 @@
 - name: install Boundary
   apt:
     name: "boundary={{ boundary_version }}"
+    force: yes
