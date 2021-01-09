@@ -60,15 +60,14 @@ If you are building a PoC to learn and explore, you may want to remove this valu
 boundary_db_init_flags: '-skip-initial-login-role'
 ```
 
-### Type of KMS to use
+### Key Management
 
-```YAML
-boundary_kms_type: 'gcpckms'
-```
-Or
-```YAML
-boundary_kms_type: 'transit'
-```
+One of the Boundary KMS types from [https://www.boundaryproject.io/docs/configuration/kms]
+
+As these choices are radically different depending on your KMS, refer to one of these examples:
+
+-- [GCP CKMS](docs/kms_gcp.md)
+-- [Hashicorp Vault - Transit secrets engine](docs/kms_transit.md)
 
 ## Dependencies
 
@@ -80,44 +79,10 @@ https://github.com/dockpack/vault\_dojo.git
 
 ## Example Playbook
 
-The following deploys a single Boundary controller and worker node.
+If you are new to Ansible playbooks and group vars, the following examples can guide you:
 
-Create an inventory file:
-
-```bash
-$ cat > inventory <<EOF
-[boundary_controllers]
-192.168.0.100
-
-[boundary_workers]
-192.168.0.101
-EOF
-```
-
-Create the group_vars directory and file:
-
-```bash
-# ensure the group_vars directory exists
-$ mkdir group_vars/
-
-# create the group_vars file for all hosts
-$ cat > group_vars/all.yml <<EOF
----
-boundary_psql_endpoint: ''
-boundary_psql_username: ''
-
-boundary_gcpckms_project: ''
-boundary_gcpckms_region: ''
-boundary_gcpckms_keyring: ''
-boundary_gcpckms_key: ''
-EOF
-```
-
-Run the playbook (Boundary PSQL password should be passed through a more secure method so it isn't shown in plaintext):
-
-```bash
-$ ansible-playbook -i inventory site.yml --extra-vars "boundary_psql_password=''"
-```
+- Creating [Boundary Playbook](docs/playbook.md)
+- Creating [Boundary Group Vars](docs/group_vars.md)
 
 ## Author Information
 
