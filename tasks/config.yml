@@ -1,33 +1,4 @@
 ---
-- name: templating out Boundary worker configuration
-  when: "'boundary_workers' in group_names"
-  block:
-    - name: templating out boundary worker configuration file
-      template:
-        src: boundary-worker.hcl.j2
-        dest: '{{ boundary_worker_file }}'
-        owner: '{{ boundary_user }}'
-        group: '{{ boundary_group }}'
-        mode: '0644'
-      notify:
-        - restart boundary-worker daemon
-
-    - name: templating out boundary worker systemd script
-      template:
-        src: boundary-worker.systemd.j2
-        dest: /etc/systemd/system/boundary-worker.service
-        owner: root
-        group: root
-        mode: '0644'
-      notify:
-        - reload boundary-worker daemon
-
-    - name: starting and enabling boundary-worker
-      systemd:
-        name: boundary-worker
-        enabled: yes
-        state: started
-
 - name: templating out Boundary controller configuration
   when: "'boundary_controllers' in group_names"
   block:
@@ -54,12 +25,40 @@
     - name: initializing database for boundary
       shell: '{{ boundary_install_directory }}/boundary database init -config {{ boundary_controller_file }} {{ boundary_db_init_flags }}'
       run_once: True
-      no_log: True
       register: boundary_database_init
       changed_when: boundary_database_init.stdout != 'Database already initialized.'
 
     - name: starting and enabling boundary-controller
       systemd:
         name: boundary-controller
+        enabled: yes
+        state: started
+
+- name: templating out Boundary worker configuration
+  when: "'boundary_workers' in group_names"
+  block:
+    - name: templating out boundary worker configuration file
+      template:
+        src: boundary-worker.hcl.j2
+        dest: '{{ boundary_worker_file }}'
+        owner: '{{ boundary_user }}'
+        group: '{{ boundary_group }}'
+        mode: '0640'
+      notify:
+        - restart boundary-worker daemon
+
+    - name: templating out boundary worker systemd script
+      template:
+        src: boundary-worker.systemd.j2
+        dest: /etc/systemd/system/boundary-worker.service
+        owner: root
+        group: root
+        mode: '0644'
+      notify:
+        - reload boundary-worker daemon
+
+    - name: starting and enabling boundary-worker
+      systemd:
+        name: boundary-worker
         enabled: yes
         state: started
