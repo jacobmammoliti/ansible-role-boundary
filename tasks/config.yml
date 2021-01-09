@@ -23,7 +23,7 @@
         - reload boundary-controller daemon
 
     - name: initializing database for boundary
-      shell: '{{ boundary_install_directory }}/boundary database init -config {{ boundary_controller_file }} {{ boundary_db_init_flags }}'
+      command: "{{ boundary_command }} database init -config {{ boundary_controller_file }} {{ boundary_db_init_flags }}"
       run_once: True
       register: boundary_database_init
       changed_when: boundary_database_init.stdout != 'Database already initialized.'
