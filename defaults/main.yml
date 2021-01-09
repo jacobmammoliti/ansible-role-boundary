@@ -12,7 +12,7 @@ boundary_install_directory: "'/usr/bin' if boundary_install_package == true else
 
 # Database initialization from https://www.boundaryproject.io/docs/installing/no-gen-resources
 # Clear this value to pre-populate an example admin, organization, and project in the DB
-boundary_db_init_flags: '-skip-initial-login-role'
+boundary_db_init_flags: '-skip-initial-login-role-creation'
 
 # Only used if package installation == false
 boundary_url: 'https://releases.hashicorp.com/boundary'
