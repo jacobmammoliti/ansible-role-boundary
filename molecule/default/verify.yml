@@ -1,0 +1,33 @@
+---
+# This is an example playbook to execute Ansible tests.
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Gather package facts
+      package_facts:
+        manager: auto
+
+    - name: Verify Packages
+      assert:
+        that: "'{{ item }}' in ansible_facts.packages"
+      with_items:
+        - boundary
+
+    - name: "Controller config file"
+      stat:
+        path: "/etc/boundary.d/controller.hcl"
+      register: controller_config
+
+    - name: "Worker config file"
+      stat:
+        path: "/etc/boundary.d/worker.hcl"
+      register: worker_config
+
+    - name: "Assert that config files exist"
+      assert:
+        that:
+          - controller_config.stat.exists
+          - controller_config.stat.size > 8  # more than 8 characters / not empty
+          - worker_config.stat.exists
+          - worker_config.stat.size > 8  # more than 8 characters / not empty

@@ -27,12 +27,14 @@
       run_once: True
       register: boundary_database_init
       changed_when: boundary_database_init.stdout != 'Database already initialized.'
+      when: not lookup('env', 'MOLECULE_FILE')  # skip when testing for now
 
     - name: starting and enabling boundary-controller
       systemd:
         name: boundary-controller
         enabled: yes
         state: started
+      when: not lookup('env', 'MOLECULE_FILE')  # skip when testing for now
 
 - name: templating out Boundary worker configuration
   when: "'boundary_workers' in group_names"
@@ -62,3 +64,4 @@
         name: boundary-worker
         enabled: yes
         state: started
+      when: not lookup('env', 'MOLECULE_FILE')  # skip when testing for now
