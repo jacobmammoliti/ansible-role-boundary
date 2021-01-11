@@ -23,7 +23,7 @@
 
 - name: install Boundary manually
   include: install_manual.yml
-  when:  boundary_install_package != true or ansible_os_family not in ['Debian', 'RedHat']
+  when: boundary_install_package != true or ansible_os_family not in ['Debian', 'RedHat']
 
 - name: install tls
   when: boundary_kms_type == 'transit'

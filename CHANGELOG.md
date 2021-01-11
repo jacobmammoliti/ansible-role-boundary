@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.2.3]
+
+### Added
+
+- New variables to control Apt and Yum repo locations. Default to Hashicorp, can be overridden now
+  - boundary_apt_repo
+  - boundary_yum_repo
+- YAML lint configuration
+
 ## [v0.2.2]
 
 ### Fixed

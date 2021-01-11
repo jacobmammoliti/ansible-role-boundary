@@ -1,6 +1,6 @@
 ---
 - name: add Hashicorp repo
-  command: yum-config-manager --add-repo=yum-config-manager --add-repo https://rpm.releases.hashicorp.com/rhel/hashicorp.repo
+  command: "yum-config-manager --add-repo=yum-config-manager --add-repo {{ boundary_yum_repo }}"
   args:
     creates: /etc/yum.repos.d/hashicorp.repo
   become: true
