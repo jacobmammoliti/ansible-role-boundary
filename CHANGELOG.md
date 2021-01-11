@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.0]
+
+### Breaking Changes
+
+- Boundary cluster TLS is always enabled.
+- `boundary_tls_disable` now controls Boundary Controller API TLS
+- Configuration variables for Vault transit TLS have changed names.
+  *This was required to allow secret-provided key/cert provisioning*
+
+### Added
+
+- Boundary API controller TLS config
+- AEAD and AWS KMS types
+- Documentation examples for each KMS Type
+
+### Changes
+
+- Boundary config file default paths
+- Boundary default KMS `aead` to match Boundary dev deployment
+- Start controller before worker
+
+### Removed
+
+- `boundary_tls_*` configuration options
+
 ## [v0.2.3]
 
 ### Added
