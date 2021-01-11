@@ -10,7 +10,7 @@ worker {
 
   # Workers must be able to reach controllers on :9202
   controllers = [
-{% for controller in groups['controllers'] %}
+{% for controller in groups['boundary_controllers'] %}
     "{{ hostvars[controller]['ansible_default_ipv4']['address'] }}"{% if not loop.last %},{% endif %}{{''}}
 {% endfor %}
 ]

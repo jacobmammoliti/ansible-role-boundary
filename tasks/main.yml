@@ -30,7 +30,7 @@
   include_tasks: tls.yml
 
 - name: configure boundary
-  include: boundary_config.yml
+  include: config.yml
 
 - name: collect facts about system services
   service_facts:
