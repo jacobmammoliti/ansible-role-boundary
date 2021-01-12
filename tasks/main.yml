@@ -49,6 +49,7 @@
 - name: collect facts about system services
   service_facts:
   register: services_state
+  become: true
 
 - name: configure firewall
   include: firewall.yml

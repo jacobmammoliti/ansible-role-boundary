@@ -16,7 +16,7 @@ boundary_command: "{{ boundary_install_directory }}/boundary"
 boundary_db_init_flags: '-skip-initial-login-role-creation'
 
 # Only used if package installation == true
-boundary_yum_repo: 'https://rpm.releases.hashicorp.com/rhel/hashicorp.repo'
+boundary_yum_repo: 'https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo'
 boundary_apt_repo: 'https://apt.releases.hashicorp.com'
 
 # Only used if package installation == false

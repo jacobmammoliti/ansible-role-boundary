@@ -1,6 +1,7 @@
 ---
 - name: Configure firewalld
   when: >
+    'services' in ansible_facts and
     'firewalld.service' in ansible_facts.services and
     ansible_facts.services['firewalld.service'].state == 'running'
   block:
@@ -28,6 +29,7 @@
 
 - name: Configure ufw firewall
   when: >
+    'services' in ansible_facts and
     'ufw.service' in ansible_facts.services and
     ansible_facts.services['ufw.service'].state == 'running'
   block:
