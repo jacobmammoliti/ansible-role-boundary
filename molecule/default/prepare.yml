@@ -2,10 +2,8 @@
 - name: Prepare
   hosts: all
   tasks:
-    - name: Update Apt
-      command: "apt-get update"
+    - name: Update Apt and install dependencies for apt-key
+      apt:
+        name: ['ca-certificates', 'gnupg']
+        update_cache: true
       when: ansible_os_family == 'Debian'
-
-    - name: Install GnuPG
-      package:
-        name: gnupg
