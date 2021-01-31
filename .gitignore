@@ -1,2 +1,3 @@
 group_vars/*
 inventory
+molecule/*/cache

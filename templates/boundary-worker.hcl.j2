@@ -12,17 +12,15 @@ worker {
 
   controllers = [
 {% for controller in groups['boundary_controllers'] %}
+{% if use_inventory_hostnames %}
   "{{ controller }}"
+{% else %}
+{% if 'ansible_default_ipv4' in hostvars[controller] %}
+    "{{ hostvars[controller]['ansible_default_ipv4']['address'] }}",
+{% endif %}
+{% endif %}
 {% endfor %}
   ]
-  # Workers must be able to reach controllers on :9202
-#  controllers = [
-#{% for controller in groups['boundary_controllers'] %}
-#{% if 'ansible_default_ipv4' in hostvars[controller] %}
-#    "{{ hostvars[controller]['ansible_default_ipv4']['address'] }}",
-#{% endif %}
-#{% endfor %}
-#  ]
   public_addr = "{{ inventory_hostname }}"
 }
 
