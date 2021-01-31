@@ -1,17 +1,32 @@
 ---
-# yamllint disable rule:line-length
+# Package installation
+boundary_install_package: true
+boundary_version: '0.1.4'
+boundary_autocomplete_state: file  # can be changed to absent
+
+# Config files can be customized
+boundary_home_directory: '/etc/boundary.d'
+boundary_worker_file: '{{ boundary_home_directory }}/worker.hcl'
+boundary_controller_file: '{{ boundary_home_directory }}/controller.hcl'
+boundary_install_directory: "{{ '/usr/bin' if boundary_install_package|bool else '{{ boundary_data_directory }}/bin' }}"
+boundary_command: "{{ boundary_install_directory }}/boundary"
+
+# Database initialization from https://www.boundaryproject.io/docs/installing/no-gen-resources
+# Clear this value to pre-populate an example admin, organization, and project in the DB
+boundary_db_init_flags: '-skip-initial-login-role-creation'
+
+# Only used if package installation == true
+boundary_yum_repo: 'https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo'
+boundary_apt_repo: 'https://apt.releases.hashicorp.com'
+
+# Only used if package installation == false
+boundary_url: 'https://releases.hashicorp.com/boundary'
+boundary_data_directory: '/opt/boundary'
+
 boundary_user: 'boundary'
 boundary_group: 'boundary'
 boundary_create_account: true
 
-boundary_home_directory: '/etc/boundary.d'
-boundary_data_directory: '/opt/boundary'
-boundary_install_directory: '{{ boundary_data_directory }}/bin'
-boundary_worker_file: '{{ boundary_home_directory }}/boundary-worker.hcl'
-boundary_controller_file: '{{ boundary_home_directory }}/boundary-controller.hcl'
-
-boundary_url: 'https://releases.hashicorp.com/boundary'
-boundary_version: '0.1.0'
 boundary_architecture_map:
   # this first entry seems... redundant (but it's required for reasons)
   amd64: amd64
@@ -23,11 +38,70 @@ boundary_os: "{{ ansible_system|lower }}"
 boundary_archive: "boundary_{{ boundary_version }}_{{ boundary_os }}_{{ boundary_architecture }}.zip"
 boundary_download: '{{ boundary_url }}/{{ boundary_version }}/{{ boundary_archive }}'
 boundary_shasums: "boundary_{{ boundary_version }}_SHA256SUMS"
+# yamllint disable-line rule:line-length
 boundary_zip_url: "{{ boundary_url }}/{{ boundary_version }}/boundary_{{ boundary_version }}_{{ boundary_os }}_{{ boundary_architecture }}.zip"
 boundary_checksum_file_url: "{{ boundary_url }}/{{ boundary_version }}/{{ boundary_shasums }}"
+
+# Database
+boundary_psql_username: boundary
+boundary_psql_dbname: boundary
+
+# KMS Configuration - default to Hashicorp dev build keys
+#  only suitable for learning, as documented at https://www.boundaryproject.io/docs/configuration/kms/aead
+boundary_kms_type: 'aead'
+boundary_aead_keys:
+  root: 'sP1fnF5Xz85RrXyELHFeZg9Ad2qt4Z4bgNHVGtD6ung='
+  worker-auth: '8fZBjCUfN0TzjEGLQldGY4+iE9AkOvCfjh7+p0GtRBQ='
+  recovery: '8fZBjCUfN0TzjEGLQldGY4+iE9AkOvCfjh7+p0GtRBQ='
+
+# Listener management
 boundary_client_addr: '0.0.0.0'
 boundary_tls_disable: true
 boundary_cors_enabled: false
 boundary_disable_mlock: true
 
-boundary_kms_type: 'gcpckms'
+# Keys should be parameter names from listener docs
+#  https://www.boundaryproject.io/docs/configuration/listener/tcp#tcp-listener-parameters
+boundary_api_listener_parameters: {}
+boundary_cluster_listener_parameters: {}
+boundary_worker_listener_parameters: {}
+
+# Controller API TLS keys and certificates
+boundary_api_tls_path: "{{ boundary_home_directory }}/tls"       # create directory if defined
+boundary_api_tls_cert_file: "{{ boundary_api_tls_path }}/api_cert.pem"
+boundary_api_tls_key_file: "{{ boundary_api_tls_path }}/api_key.pem"
+boundary_api_tls_ca_file: "{{ boundary_api_tls_path }}/api_ca.pem"
+
+# Copy TLS files from local or remote
+# boundary_api_tls_src_path: 'files/tls'  # only used within other values below relative to the playbook
+# boundary_api_tls_ca_src_remote: false   # true to use remote file
+# boundary_api_tls_ca_src_file: "{{ boundary_api_tls_src_path }}/ca_cert.pem"
+# boundary_api_tls_cert_src_remote: false
+# boundary_api_tls_cert_src_file: "{{ boundary_api_tls_src_path }}/client_cert.pem"
+# boundary_api_tls_key_src_remote: false
+# boundary_api_tls_key_src_file: "{{ boundary_api_tls_src_path }}/client_key.pem"
+
+# or provided the data from an Ansible secret data source
+# boundary_api_tls_ca_content: secret_provided_value
+# boundary_api_tls_cert_content: secret_provided_value
+# boundary_api_tls_key_content: secret_provided_value
+
+# Vault transit KMS TLS keys and certificates
+boundary_transit_tls_path: "{{ boundary_home_directory }}/tls"  # create directory if defined
+boundary_transit_tls_ca_file: "{{ boundary_transit_tls_path }}/ca.pem"
+boundary_transit_tls_cert_file: "{{ boundary_transit_tls_path }}/cert.pem"
+boundary_transit_tls_key_file: "{{ boundary_transit_tls_path }}/key.pem"
+
+# Copy TLS files from local or remote
+# boundary_transit_tls_src_path: 'files/tls'  # only used within other values below relative to the playbook
+# boundary_transit_tls_ca_src_remote: false   # true to use remote file
+# boundary_transit_tls_ca_src_file: "{{ boundary_transit_tls_src_path }}/ca_cert.pem"
+# boundary_transit_tls_cert_src_remote: false
+# boundary_transit_tls_cert_src_file: "{{ boundary_transit_tls_src_path }}/client_cert.pem"
+# boundary_transit_tls_key_src_remote: false
+# boundary_transit_tls_key_src_file: "{{ boundary_transit_tls_src_path }}/client_key.pem"
+
+# or provided the data from an Ansible secret data source
+# boundary_transit_tls_ca_content: secret_provided_value
+# boundary_transit_tls_cert_content: secret_provided_value
+# boundary_transit_tls_key_content: secret_provided_value

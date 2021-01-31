@@ -1,0 +1,42 @@
+---
+- name: Create transit TLS directory
+  become: true
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: "{{ boundary_user }}"
+    group: "{{ boundary_group }}"
+    mode: "0755"
+  with_items:
+    - "{{ boundary_transit_tls_path }}"
+  when: >
+    boundary_transit_tls_path|length and
+    boundary_transit_tls_path != boundary_api_tls_path
+
+- name: SSL Certificate and Key
+  become: true
+  copy:
+    remote_src: "{{ item.remote_src }}"
+    content: "{{ item.content }}"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ boundary_user }}"
+    group: "{{ boundary_group }}"
+    mode: "{{ item.mode }}"
+  no_log: "{{ True if boundary_transit_tls_key_content else False }}"
+  with_items:
+    - dest: "{{ boundary_transit_tls_cert_file }}"
+      src: "{{ boundary_transit_tls_cert_src_file | default(omit) }}"
+      remote_src: "{{ boundary_transit_tls_cert_src_remote | default('false') }}"
+      content: "{{ boundary_transit_tls_cert_content | default(omit) }}"
+      mode: "0644"
+    - dest: "{{ boundary_transit_tls_key_file }}"
+      src: "{{ boundary_transit_tls_key_src_file | default(omit) }}"
+      remote_src: "{{ boundary_transit_tls_key_src_remote | default('false') }}"
+      content: "{{ boundary_transit_tls_key_content | default(omit) }}"
+      mode: "0600"
+    - dest: "{{ boundary_transit_tls_ca_file }}"
+      src: "{{ boundary_transit_tls_ca_src_file | default(omit) }}"
+      remote_src: "{{ boundary_transit_tls_ca_src_remote | default('false') }}"
+      content: "{{ boundary_transit_tls_ca_content | default(omit) }}"
+      mode: "0644"

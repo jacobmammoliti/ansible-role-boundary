@@ -1,0 +1,17 @@
+---
+- name: install Yum utils if they aren't installed already
+  yum:
+    name: 'yum-utils'
+    state: present
+  become: true
+
+- name: add Hashicorp repo
+  command: "yum-config-manager --add-repo {{ boundary_yum_repo }}"
+  args:
+    creates: /etc/yum.repos.d/hashicorp.repo
+  become: true
+
+- name: install Boundary
+  yum:
+    name: "boundary-{{ boundary_version }}"
+  become: true

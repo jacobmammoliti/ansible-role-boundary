@@ -1,0 +1,47 @@
+---
+- name: Create TLS directory
+  become: true
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: "{{ boundary_user }}"
+    group: "{{ boundary_group }}"
+    mode: "0755"
+  with_items:
+    - "{{ boundary_api_tls_path }}"
+  when: boundary_api_tls_path|length
+
+- name: SSL Certificate and Key
+  become: true
+  copy:
+    remote_src: "{{ item.remote_src }}"
+    content: "{{ item.content }}"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ boundary_user }}"
+    group: "{{ boundary_group }}"
+    mode: "{{ item.mode }}"
+  no_log: "{{ True if boundary_api_tls_key_content else False }}"
+  with_items:
+    - dest: "{{ boundary_api_tls_cert_file }}"
+      src: "{{ boundary_api_tls_cert_src_file | default(omit) }}"
+      remote_src: "{{ boundary_api_tls_cert_src_remote | default('false') }}"
+      content: "{{ boundary_api_tls_cert_content | default(omit) }}"
+      mode: '0644'
+    - dest: "{{ boundary_api_tls_key_file }}"
+      src: "{{ boundary_api_tls_key_src_file | default(omit) }}"
+      remote_src: "{{ boundary_api_tls_key_src_remote | default('false') }}"
+      content: "{{ boundary_api_tls_key_content | default(omit) }}"
+      mode: '0600'
+
+- name: SSL Certificate Authority
+  become: true
+  copy:
+    remote_src: "{{ boundary_api_tls_ca_src_remote | default('false') }}"
+    dest: "{{ boundary_api_tls_ca_file }}"
+    src: "{{ boundary_api_tls_ca_src_file | default(omit) }}"
+    content: "{{ boundary_api_tls_ca_content | default(omit) }}"
+    owner: "{{ boundary_user }}"
+    group: "{{ boundary_group }}"
+    mode: '0644'
+  when: boundary_tls_ca_file_src is defined or boundary_tls_ca_content is defined

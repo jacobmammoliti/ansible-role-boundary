@@ -1,0 +1,10 @@
+---
+- name: Add Hashicorp tap for Boundary
+  community.general.homebrew_tap:
+    name: hashicorp/tap/boundary
+    state: present
+
+- name: install Boundary
+  community.general.homebrew:
+    name: boundary
+    state: present

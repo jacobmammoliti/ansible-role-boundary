@@ -1,0 +1,44 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+  flake8
+platforms:
+  - name: ubuntu-20.04
+    image: ubuntu:20.04
+    privileged: True
+    groups:
+      - boundary_controllers
+      - boundary_workers
+  - name: centos-8
+    image: centos:8
+    privileged: True
+    groups:
+      - boundary_controllers
+      - boundary_workers
+provisioner:
+  name: ansible
+  log: True
+  options:
+    vvv: True
+  config_options:
+    defaults:
+      deprecation_warnings: False
+      callback_whitelist: timer,profile_tasks
+      fact_caching: jsonfile
+      fact_caching_connection: ./cache
+    connection:
+      pipelining: True
+  inventory:
+    group_vars:
+      boundary_controllers:
+        consul_node_role: bootstrap
+verifier:
+  name: ansible
+scenario:
+  name: default

@@ -6,7 +6,7 @@ ExecStart={{ boundary_install_directory }}/boundary server -config {{ boundary_c
 User={{ boundary_user }}
 Group={{ boundary_group }}
 LimitMEMLOCK=infinity
-Capabilities=CAP_IPC_LOCK+ep
+AmbientCapabilities=CAP_IPC_LOCK+ep
 CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
 
 [Install]

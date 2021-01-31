@@ -1,0 +1,11 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Apply Boundary role
+      include_role:
+        name: "ansible-role-boundary"
+      vars:
+        boundary_psql_endpoint: 'postgres'
+        boundary_psql_username: 'boundary'
+        boundary_psql_password: 'foobar'
