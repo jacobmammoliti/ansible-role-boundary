@@ -3,7 +3,7 @@ disable_mlock = {{ boundary_disable_mlock | lower }}
 controller {
   name = "{{ ansible_hostname }}-controller"
   description = "Boundary controller."
-
+  
   public_cluster_addr = "{{ inventory_hostname }}"
   
   database {

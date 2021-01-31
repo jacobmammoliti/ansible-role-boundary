@@ -10,7 +10,6 @@ worker {
   name = "{{ ansible_hostname }}-worker"
   description = "Boundary worker."
 
-  # Workers must be able to reach controllers on :9202
   controllers = [
 {% for controller in groups['boundary_controllers'] %}
 {% if use_inventory_hostnames %}
