@@ -4,6 +4,8 @@ controller {
   name = "{{ ansible_hostname }}-controller"
   description = "Boundary controller."
 
+  public_cluster_addr = "{{ inventory_hostname }}"
+  
   database {
       url = "postgresql://{{ boundary_psql_username }}:{{ boundary_psql_password }}@{{ boundary_psql_endpoint }}/{{ boundary_psql_dbname }}"
   }

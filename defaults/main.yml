@@ -105,3 +105,6 @@ boundary_transit_tls_key_file: "{{ boundary_transit_tls_path }}/key.pem"
 # boundary_transit_tls_ca_content: secret_provided_value
 # boundary_transit_tls_cert_content: secret_provided_value
 # boundary_transit_tls_key_content: secret_provided_value
+
+# Use this flag if you want Boundary workers to reach Controllers via the address in inventory
+use_inventory_hostnames: false
