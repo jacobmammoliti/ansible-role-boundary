@@ -7,7 +7,7 @@ controller {
   public_cluster_addr = "{{ inventory_hostname }}"
 
   database {
-      url = "postgresql://{{ boundary_psql_username }}:{{ boundary_psql_password }}@{{ boundary_psql_endpoint }}/{{ boundary_psql_dbname }}"
+      url = "postgresql://{{ boundary_psql_username }}:{{ boundary_psql_password }}@{{ boundary_psql_endpoint }}/{{ boundary_psql_dbname }}{{ boundary_psql_extra_options }}"
   }
 }
 

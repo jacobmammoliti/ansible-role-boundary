@@ -45,6 +45,7 @@ boundary_checksum_file_url: "{{ boundary_url }}/{{ boundary_version }}/{{ bounda
 # Database
 boundary_psql_username: boundary
 boundary_psql_dbname: boundary
+boundary_psql_extra_options: ""
 
 # KMS Configuration - default to Hashicorp dev build keys
 #  only suitable for learning, as documented at https://www.boundaryproject.io/docs/configuration/kms/aead
