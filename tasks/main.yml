@@ -40,7 +40,9 @@
   include_tasks: tls_api.yml
 
 - name: install Vault Transit TLS certificates
-  when: boundary_kms_type == 'transit'
+  when:
+    - boundary_kms_type == 'transit'
+    - (true if boundary_vault_no_tls else false)
   include_tasks: tls_vault_transit.yml
 
 - name: configure boundary
