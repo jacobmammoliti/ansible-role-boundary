@@ -53,7 +53,7 @@ kms "gcpckms" {
 {% elif boundary_kms_type == 'transit' %}
 kms "transit" {
   purpose            = "{{ key_type }}"
-  address            = "https://{{ boundary_vault_instances[0] }}:8200"
+  address            = "{{ 'https' if boundary_vault_use_tls else 'http' }}://{{ boundary_vault_instances[0] }}:8200"
   token              = "{{ lookup('env','VAULT_TOKEN') }}"
   disable_renewal    = "{{ boundary_transit_disable_renewal |default('false') }}"
 
@@ -62,8 +62,8 @@ kms "transit" {
   namespace          = "{{ boundary_transit_namespace }}"
   mount_path         = "{{ boundary_transit_mount_path }}"
 
-  // TLS Configuration
 {% if boundary_vault_use_tls %}
+  // TLS Configuration
   tls_server_name    = "{{ boundary_transit_tls_server_name |default(boundary_vault_instances[0]) }}"
   tls_ca_cert        = "{{ boundary_transit_tls_ca_file     |default('') }}"
   tls_client_cert    = "{{ boundary_transit_tls_cert_file   |default('') }}"
