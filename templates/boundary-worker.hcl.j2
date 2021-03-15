@@ -63,11 +63,13 @@ kms "transit" {
   mount_path         = "{{ boundary_transit_mount_path }}"
 
   // TLS Configuration
+{% if boundary_vault_use_tls %}
   tls_server_name    = "{{ boundary_transit_tls_server_name |default(boundary_vault_instances[0]) }}"
   tls_ca_cert        = "{{ boundary_transit_tls_ca_file     |default('') }}"
   tls_client_cert    = "{{ boundary_transit_tls_cert_file   |default('') }}"
   tls_client_key     = "{{ boundary_transit_tls_key_file    |default('') }}"
   tls_skip_verify    = "{{ boundary_transit_tls_skip_verify |default('false') }}"
+{% endif %}
 }
 {% endif %}
 {% endfor %}
