@@ -26,7 +26,11 @@
       shell: "{{ boundary_command }} database init -config {{ boundary_controller_file }} {{ boundary_db_init_flags }}"
       run_once: True
       register: boundary_database_init
-      changed_when: boundary_database_init.stdout != 'Database already initialized.'
+      changed_when:
+        - "'Database has already been initialized.' not in boundary_database_init.stderr"
+      failed_when:
+        - "boundary_database_init.rc != 0"
+        - "'Database has already been initialized.' not in boundary_database_init.stderr"
       when: not lookup('env', 'MOLECULE_FILE')  # skip when testing for now
 
     - name: starting and enabling boundary-controller
