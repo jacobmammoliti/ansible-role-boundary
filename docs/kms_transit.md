@@ -19,7 +19,7 @@ Add the Vault transit keystore details
 ```YAML
 # Required settings
 boundary_kms_type: 'transit'
-vault_instances:
+boundary_vault_instances:
   - vault.example.com
 boundary_transit_mount_path: 'transit/'
 boundary_transit_namespace: 'ns1'
