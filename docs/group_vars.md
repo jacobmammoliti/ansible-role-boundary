@@ -37,9 +37,9 @@ Reference those secrets in the group vars.
 
 As KMS configuration is radically different depending on your choice of KMS, refer to one of these examples:
 
-- [GCP CKMS](examples/kms_gcp.md)
-- [AWS KMS](examples/kms_aws.md)
-- [Hashicorp Vault - Transit secrets engine](examples/kms_transit.md)
-- [Static AEAD Keys](examples/kms_aead.md) - not suitable for production use
+- [GCP CKMS](kms_gcp.md)
+- [AWS KMS](kms_aws.md)
+- [Hashicorp Vault - Transit secrets engine](kms_transit.md)
+- [Static AEAD Keys](kms_aead.md) - not suitable for production use
 
 These values will need to be added to the group vars.
