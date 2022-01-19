@@ -4,6 +4,7 @@
     'services' in ansible_facts and
     'firewalld.service' in ansible_facts.services and
     ansible_facts.services['firewalld.service'].state == 'running'
+  become: true
   block:
     - name: open boundary-controller tcp port
       when:
@@ -32,6 +33,7 @@
     'services' in ansible_facts and
     'ufw.service' in ansible_facts.services and
     ansible_facts.services['ufw.service'].state == 'running'
+  become: true
   block:
     - name: open boundary-controller tcp port
       when: "'boundary_controllers' in group_names"

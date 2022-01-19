@@ -5,12 +5,14 @@
       - unzip
       - curl
     state: present
+  become: true
 
 - name: creating boundary group
   group:
     name: '{{ boundary_group }}'
     system: yes
   when: boundary_create_account
+  become: true
 
 - name: creating boundary user
   user:
@@ -20,6 +22,7 @@
     shell: /bin/false
     system: yes
   when: boundary_create_account
+  become: true
 
 - name: creating boundary directories
   file:
@@ -32,12 +35,14 @@
     - '{{ boundary_home_directory }}'
     - '{{ boundary_data_directory }}'
     - '{{ boundary_install_directory }}'
+  become: true
 
 - name: ensure remote boundary dir exists
   file:
     path: /tmp/boundary
     state: directory
     mode: 0755
+  become: true
 
 - name: check boundary package checksum file
   stat:
@@ -83,6 +88,7 @@
     mode: '0770'
   tags:
     - install
+  become: true
 
 - name: check mlock capability
   become: true
@@ -95,3 +101,4 @@
   become: true
   command: "setcap cap_ipc_lock=+ep {{ boundary_install_directory }}/boundary"
   when: mlock_capability.rc|int == 1
+  become: true
