@@ -12,19 +12,19 @@
   when: boundary_install_package|bool
   block:
     - name: install Boundary with Debian packages
-      include: install_package_debian.yml
+      include_tasks: install_package_debian.yml
       when: ansible_os_family == 'Debian'
 
     - name: install Boundary with RedHat packages
-      include: install_package_redhat.yml
+      include_tasks: install_package_redhat.yml
       when: ansible_os_family == 'RedHat'
 
     - name: install Boundary with Homebrew
-      include: install_package_mac.yml
+      include_tasks: install_package_mac.yml
       when: ansible_os_family == 'Darwin'
 
 - name: install Boundary manually
-  include: install_manual.yml
+  include_tasks: install_manual.yml
   when: not boundary_install_package|bool or ansible_os_family not in ['Debian', 'RedHat', 'Darwin']
 
 - name: creating boundary config directory
@@ -34,6 +34,7 @@
     owner: '{{ boundary_user }}'
     group: '{{ boundary_group }}'
     mode: '0750'
+  become: true
 
 - name: install API TLS certificates
   when: not boundary_tls_disable|bool
@@ -44,7 +45,7 @@
   include_tasks: tls_vault_transit.yml
 
 - name: configure boundary
-  include: config.yml
+  include_tasks: config.yml
 
 - name: collect facts about system services
   service_facts:
@@ -52,7 +53,7 @@
   become: true
 
 - name: configure firewall
-  include: firewall.yml
+  include_tasks: firewall.yml
 
 - name: install boundary autocomplete
-  include: autocomplete.yml
+  include_tasks: autocomplete.yml

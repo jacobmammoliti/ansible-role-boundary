@@ -4,12 +4,14 @@
     name: boundary-controller
     state: restarted
   when: not lookup('env', 'MOLECULE_FILE')  # skip when testing for now
+  become: true
 
 - name: restart boundary-worker daemon
   systemd:
     name: boundary-worker
     state: restarted
   when: not lookup('env', 'MOLECULE_FILE')  # skip when testing for now
+  become: true
 
 - name: reload boundary-controller daemon
   systemd:
@@ -17,6 +19,7 @@
     state: restarted
     daemon_reload: yes
   when: not lookup('env', 'MOLECULE_FILE')  # skip when testing for now
+  become: true
 
 - name: reload boundary-worker daemon
   systemd:
@@ -24,3 +27,4 @@
     state: restarted
     daemon_reload: yes
   when: not lookup('env', 'MOLECULE_FILE')  # skip when testing for now
+  become: true

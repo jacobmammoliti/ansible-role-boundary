@@ -1,6 +1,7 @@
 ---
 - name: templating out Boundary controller configuration
   when: "'boundary_controllers' in group_names"
+  become: true
   block:
     - name: templating out boundary controller configuration file
       template:
@@ -38,6 +39,7 @@
 
 - name: templating out Boundary worker configuration
   when: "'boundary_workers' in group_names"
+  become: true
   block:
     - name: templating out boundary worker configuration file
       template:
