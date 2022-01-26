@@ -8,6 +8,23 @@
   set_fact:
     boundary_address: "{{ hostvars[inventory_hostname]['ansible_'+boundary_iface]['ipv4']['address'] }}"
 
+- name: creating boundary group
+  group:
+    name: '{{ boundary_group }}'
+    system: yes
+  when: boundary_create_account
+  become: true
+
+- name: creating boundary user
+  user:
+    name: '{{ boundary_user }}'
+    home: '{{ boundary_home_directory }}'
+    group: '{{ boundary_group }}'
+    shell: /bin/false
+    system: yes
+  when: boundary_create_account
+  become: true
+
 - name: install Boundary with packages
   when: boundary_install_package|bool
   block:

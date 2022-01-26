@@ -7,23 +7,6 @@
     state: present
   become: true
 
-- name: creating boundary group
-  group:
-    name: '{{ boundary_group }}'
-    system: yes
-  when: boundary_create_account
-  become: true
-
-- name: creating boundary user
-  user:
-    name: '{{ boundary_user }}'
-    home: '{{ boundary_home_directory }}'
-    group: '{{ boundary_group }}'
-    shell: /bin/false
-    system: yes
-  when: boundary_create_account
-  become: true
-
 - name: creating boundary directories
   file:
     state: directory

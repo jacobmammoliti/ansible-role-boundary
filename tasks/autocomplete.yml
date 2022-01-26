@@ -9,6 +9,7 @@
   register: completion_dir_stat
 
 - name: Install autocomplete
+  become: true
   when: boundary_autocomplete_state == 'file'
   lineinfile:
     state: present
@@ -22,6 +23,7 @@
   with_items: "{{ completion_dir_stat.results | selectattr('stat.exists') | map(attribute='item') | list }}"
 
 - name: Remove autocomplete
+  become: true
   when: boundary_autocomplete_state == 'absent'
   file:
     state: absent
