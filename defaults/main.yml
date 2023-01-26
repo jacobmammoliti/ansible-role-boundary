@@ -1,7 +1,7 @@
 ---
 # Package installation
 boundary_install_package: true
-boundary_version: '0.7.5'
+boundary_version: '0.11.2'
 boundary_autocomplete_state: file  # can be changed to absent
 
 # Config files can be customized
@@ -78,6 +78,8 @@ boundary_client_addr: '0.0.0.0'
 boundary_tls_disable: false
 boundary_cors_enabled: false
 boundary_cors_allowed_origins: ['*']
+
+# Disable memory lock: https://www.man7.org/linux/man-pages/man2/mlock.2.html
 boundary_disable_mlock: true
 
 # Keys should be parameter names from listener docs
